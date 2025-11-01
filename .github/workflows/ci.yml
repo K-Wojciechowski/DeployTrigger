@@ -23,11 +23,11 @@ jobs:
       with:
         dotnet-version: 9.0.x
     - name: Build
-      run: dotnet publish -o out
+      run: dotnet publish -o dist
       working-directory: ./src/DeployTrigger
     - name: Create zip
       run: zip ../../../DeployTrigger-linux-amd64.zip ./*
-      working-directory: ./src/DeployTrigger/out
+      working-directory: ./src/DeployTrigger/dist
     - name: Upload binaries to pipeline artifacts
       uses: actions/upload-artifact@v4
       with:
