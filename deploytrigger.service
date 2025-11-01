@@ -1,0 +1,13 @@
+[Unit]
+Description=DeployTrigger
+After=network.target
+
+[Service]
+ExecStart=/srv/DeployTrigger/bin/DeployTrigger
+Restart=on-failure
+User=deploytrigger
+Group=deploytrigger
+EnvironmentFile=/srv/DeployTrigger/.env
+
+[Install]
+WantedBy=multi-user.target
