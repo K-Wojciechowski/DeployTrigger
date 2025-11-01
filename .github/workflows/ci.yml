@@ -28,10 +28,10 @@ jobs:
     - name: Create zip
       run: zip ../../../DeployTrigger-linux-amd64.zip ./*
       working-directory: ./src/DeployTrigger/out
-    - name: Upload Lambda package to pipeline artifacts
+    - name: Upload binaries to pipeline artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: lambda-package
+        name: DeployTrigger-linux-amd64.zip
         path: ./DeployTrigger-linux-amd64.zip
         retention-days: 30
     - name: Upload binaries to release
