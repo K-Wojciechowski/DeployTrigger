@@ -10,8 +10,18 @@ on:
 
 jobs:
   build:
-    name: Build and Publish
-    runs-on: ubuntu-latest
+    name: Build and Publish (${{ matrix.arch }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        include:
+          - arch: amd64
+            os: ubuntu-latest
+            artifact: DeployTrigger-linux-amd64
+          - arch: arm64
+            os: ubuntu-24.04-arm64
+            artifact: DeployTrigger-linux-arm64
 
     permissions:
       contents: write
@@ -27,15 +37,15 @@ jobs:
       working-directory: ./src/DeployTrigger
     - name: Create zip
       run: |
-        mkdir DeployTrigger-linux-amd64
-        mv src/DeployTrigger/publish/* DeployTrigger-linux-amd64/
-        zip -r DeployTrigger-linux-amd64.zip DeployTrigger-linux-amd64
+        mkdir ${{ matrix.artifact }}
+        mv src/DeployTrigger/publish/* ${{ matrix.artifact }}/
+        zip -r ${{ matrix.artifact }}.zip ${{ matrix.artifact }}
         mkdir dist
-        mv DeployTrigger-linux-amd64 dist/
+        mv ${{ matrix.artifact }} dist/
     - name: Upload binaries to pipeline artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: DeployTrigger-linux-amd64
+        name: ${{ matrix.artifact }}
         path: ./dist
         retention-days: 30
     - name: Upload binaries to release
@@ -43,7 +53,7 @@ jobs:
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ./DeployTrigger-linux-amd64.zip
-        asset_name: DeployTrigger-linux-amd64.zip
+        file: ${{ matrix.artifact }}.zip
+        asset_name: ${{ matrix.artifact }}.zip
         tag: ${{ github.ref }}
         overwrite: true
