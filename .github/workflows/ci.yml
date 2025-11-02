@@ -23,18 +23,20 @@ jobs:
       with:
         dotnet-version: 9.0.x
     - name: Build
-      run: dotnet publish -o dist
+      run: dotnet publish -o publish
       working-directory: ./src/DeployTrigger
     - name: Create zip
       run: |
         mkdir DeployTrigger-linux-amd64
-        mv src/DeployTrigger/dist/* DeployTrigger-linux-amd64/
+        mv src/DeployTrigger/publish/* DeployTrigger-linux-amd64/
         zip -r DeployTrigger-linux-amd64.zip DeployTrigger-linux-amd64
+        mkdir dist
+        mv DeployTrigger-linux-amd64 dist/
     - name: Upload binaries to pipeline artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: DeployTrigger-linux-amd64.zip
-        path: ./DeployTrigger-linux-amd64
+        name: DeployTrigger-linux-amd64
+        path: ./dist
         retention-days: 30
     - name: Upload binaries to release
       if: startsWith(github.ref, 'refs/tags/v')
