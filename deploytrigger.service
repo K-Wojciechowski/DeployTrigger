@@ -8,6 +8,8 @@ Restart=on-failure
 User=deploytrigger
 Group=deploytrigger
 EnvironmentFile=/srv/DeployTrigger/.env
+StandardOutput=journal
+StandardError=journal
 
 [Install]
 WantedBy=multi-user.target
