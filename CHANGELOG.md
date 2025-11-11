@@ -1,12 +1,16 @@
 # DeployTrigger Changelog
 
+## 1.1.1
+
+* Fix error codes not being returned as responses
+
 ## 1.1.0
 
-* Upgrade to .NET 10.
+* Upgrade to .NET 10
 
 ## 1.0.1
 
-* Add arm64 build pipelines.
+* Add arm64 build pipelines
 
 ## 1.0.0
 

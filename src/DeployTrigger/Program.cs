@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +11,10 @@ builder.Services.AddLogging(loggingBuilder => loggingBuilder.AddSimpleConsole(op
   options.IncludeScopes = true;
   options.TimestampFormat = "yyyy-MM-dd HH:mm:ss ";
 }));
+
+builder.Services.ConfigureHttpJsonOptions(options => {
+  options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
+});
 
 var app = builder.Build();
 
@@ -83,7 +88,12 @@ app.MapGet("/{project}", async (string project, [FromQuery] string? argument, Ht
 
   app.Logger.LogInformation("Script '{ScriptPath}' with argument '{Argument}' exited with code '{ExitCode}'",
       scriptPath, argument, process.ExitCode);
+
   return process.ExitCode == 0 ? Results.Ok() : Results.InternalServerError(process.ExitCode);
 });
 
 app.Run();
+
+
+[JsonSerializable(typeof(int))]
+internal partial class AppJsonSerializerContext : JsonSerializerContext;
